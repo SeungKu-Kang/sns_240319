@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/defaultLayout}">
+
+<section layout:fragment="content" class="contents">
+	<div class="postingBox border">
+		<textarea class="border border-0 w-100" rows="3"></textarea>
+		<div class="d-flex justify-content-between">
+			<img id="imageIcon" src="https://cdn.icon-icons.com/icons2/510/PNG/512/image_icon-icons.com_50366.png"
+			 alt="이미지 아이콘">
+			<button type="button" class="btn btn-primary">게시</button>
+		</div>	
+	</div>
+
+	
+</section>
+
+<th:block layout:fragment="script">
+	<script>
+
+	</script>
+</th:block>
+
+</html>
