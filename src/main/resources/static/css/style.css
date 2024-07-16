@@ -12,7 +12,6 @@ footer {
 
 section {
     margin: 0 auto;
-    width:600px;
 }
 #inputBox {
     min-width: 500px;
@@ -43,6 +42,17 @@ section {
     height: 50px;
 }
 
-#imageIcon {
-	
+.postingBox {
+	width: 600px;
+	min-height: 50px;
 }
+
+#imageIcon {
+	width: 70px;
+}
+
+#postingBtn {
+	width: 70px;
+}
+
+
