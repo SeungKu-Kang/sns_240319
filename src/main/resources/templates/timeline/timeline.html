@@ -7,11 +7,17 @@
 	<div class="contents-box">
 		<!-- 글쓰기 영역(로그인 된 사람만 보임) -->
 		<div th:if="${session.userId != null}" class="write-box border rounded m-3">
-			<textarea id="writeTextArea" placeholder="내용을 입력해주세요" class="w-100 border-0"></textarea>
+			<textarea id="writeTextArea" placeholder="내용을 입력해주세요" class="w-100 border-0" rows="3"></textarea>
 			
 			<div class="d-flex justify-content-between">
 				<div class="file-upload d-flex">
-					<img width="35" src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-image-512.png">
+					<!-- file태그를 숨겨두고 이미지를 클릭하면 file을 클릭한 것과 같은 효과를 준다. -->
+					<input type="file" id="file" accept=".jpg, .png, .gif" class="d-none">
+				
+					<!-- 이미지에 마우스 올리면 마우스 커서가 link로 변경 -->
+					<a href="#" id="fileUploadBtn"><img width="35" src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-image-512.png"></a>
+					
+					<div id="fileName" class="ml-2"></div>
 				</div>
 				<button id="writeBtn" class="btn btn-info">게시</button>
 			</div>
@@ -78,6 +84,104 @@
 
 <th:block layout:fragment="script">
     <script>
-
+		$(document).ready(function() {
+			// 이미지 a태그 클릭 => 숨겨져 있는 id="file" 태그 동작시킴
+			$("#fileUploadBtn").on('click', function(e) {
+				e.preventDefault(); // a태그를 눌렀을 때 화면이 위로 올라가는 현상 방지
+				// alert("클릭");
+				$("#file").click(); // input type="file" 클릭
+			});
+			
+			// 파일이 선택될 때,  1.유효성 체크 2.파일명 노출
+			$("#file").on('change', function(e) {
+				// 파일업로드하려다 취소를 누를 때 처리
+				// => 파일이 비워지므로 .name에서 에러 발생 (꺼낼 수 없기 때문)
+				let file = e.target.files[0];
+				if (file == null) {
+					$("#file").val("");
+					$("#fileName").text("");
+					return;
+				}
+				
+				// alert("이미지 선택");
+				let fileName = e.target.files[0].name; // gecko-8483282_960_720.png
+				console.log(fileName);
+				
+				// 1. 확장자 validation
+				let ext = fileName.split(".").pop().toLowerCase();
+				console.log(ext);
+				
+				if (ext != "gif" && ext != "png" && ext != "jpg") {
+					alert("이미지 파일만 업로드 할 수 있습니다.");
+					$("#file").val(""); //파일 태그에 올라온 것 제거(보이지 않지만 꼭! 처리)
+					$("#fileName").text(""); // 보여지고 있는 파일명도 초기화
+					return;
+					
+					
+				}
+				
+				// 2. 파일명 노출
+				$("#fileName").text(fileName);
+			});
+			
+			$("#writeBtn").on('click', function() {
+				//alert("게시");
+				
+				// file은 변수 어떻게 잡나?
+				let writeTextArea = $("#writeTextArea").val().trim();
+				
+				
+				if (!writeTextArea) {
+					alert("내용을 입력하세요.");
+					return;
+				}
+				
+				console.log(writeTextArea);
+				
+				let formData = new FormData();
+				formData.append("writeTextArea", writeTextArea);
+				formData.append("file", file);
+				
+				// AJAX
+				$.ajax({
+					// request
+					type:"post"
+					, url:"/post/create"
+					, data:formData
+					, enctyp:"multipart/form-data"
+					, processData:false
+					, contentType:false
+					
+					
+					// response
+					, success:function(data) {
+						if (data.code == 200) {
+							alert("글을 게시하였습니다.");
+							
+							// 글 목록 화면으로 이동
+							location.href = "/timeline/timeline-view";
+						} else {
+							alert(data.error_message);
+						}
+					}
+					, error:function(e) {
+						alert("글을 게시하는데 실패했습니다.");
+					}
+				});
+			});
+		});
     </script>
 </th:block>
+
+
+
+
+
+
+
+
+
+
+
+
+

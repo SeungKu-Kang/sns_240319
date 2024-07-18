@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.sns.post.Entity.PostEntity;
 
 @Mapper
 public interface PostMapper {
