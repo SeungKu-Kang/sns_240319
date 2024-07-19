@@ -7,8 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.sns.post.Entity.PostEntity;
 import com.sns.post.bo.PostBO;
+import com.sns.post.entity.PostEntity;
 
 @Controller
 public class TimelineController {

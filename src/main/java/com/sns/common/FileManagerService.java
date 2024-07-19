@@ -2,6 +2,7 @@ package com.sns.common;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -35,13 +36,14 @@ public class FileManagerService {
 			byte[] bytes = file.getBytes();
 			// ★★★★★★★★★ 한글명으로 된 이미지는 업로드 불가하므로 나중에 영문자로 바꾸기
 			Path path = Paths.get(filePath + file.getOriginalFilename());
+			Files.write(path, bytes);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}
 		
 		// 파일 업로드가 성공하면 이미지 url path를 리턴
-		return "images/" + directoryName + "/" + file.getOriginalFilename();
+		return "/images/" + directoryName + "/" + file.getOriginalFilename();
 				
 	}
 }

@@ -1,8 +1,9 @@
-package com.sns.post.Entity;
+package com.sns.post.entity;
 
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,7 +21,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Getter
+@Getter	
 @Table(name = "post")
 @Entity
 public class PostEntity {
@@ -28,19 +29,19 @@ public class PostEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@Column(name="userId")
+	@Column(name = "userId")
 	private int userId;
 	
 	private String content;
 	
-	@Column(name="imagePath")
+	@Column(name = "imagePath")
 	private String imagePath;
 	
-	@Column(name="createdAt")
 	@CreationTimestamp
+	@Column(name = "createdAt")
 	private LocalDateTime createdAt;
 	
-	@Column(name="updatedAt")
-	@CreationTimestamp
+	@UpdateTimestamp
+	@Column(name = "updatedAt")
 	private LocalDateTime updatedAt;
 }
