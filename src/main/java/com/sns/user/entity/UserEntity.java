@@ -1,4 +1,4 @@
-package com.sns.user.Entity;
+package com.sns.user.entity;
 
 import java.time.LocalDateTime;
 

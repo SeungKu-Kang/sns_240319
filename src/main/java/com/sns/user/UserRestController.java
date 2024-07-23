@@ -10,10 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sns.common.EncryptUtils;
-import com.sns.user.Entity.UserEntity;
 import com.sns.user.bo.UserBO;
+import com.sns.user.entity.UserEntity;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @RequestMapping("/user")
@@ -33,7 +32,7 @@ public class UserRestController {
 			@RequestParam("loginId") String loginId) {
 		
 		// db 조회
-		UserEntity user = userBO.getUSerEntityByLoginId(loginId);
+		UserEntity user = userBO.getUserEntityByLoginId(loginId);
 		
 		// 응답값
 		Map<String, Object> result = new HashMap<>();
@@ -46,21 +45,30 @@ public class UserRestController {
 		return result;
 	}
 	
+	/**
+	 * 회원가입 API
+	 * @param loginId
+	 * @param password
+	 * @param name
+	 * @param email
+	 * @return
+	 */
 	@PostMapping("/sign-up")
 	public Map<String, Object> signUp(
 			@RequestParam("loginId") String loginId,
 			@RequestParam("password") String password,
 			@RequestParam("name") String name,
-			@RequestParam("email") String email)  {
+			@RequestParam("email") String email) {
 		
-		// password md5 알고리즘 => hashing
-		// aaaa => 
+		// password md5 알고리즘 => hashing   
+		// aaaa => 74b8733745420d4d33f80c4663dc5e5
+		// aaaa => 74b8733745420d4d33f80c4663dc5e5
 		String hashedPassword = EncryptUtils.md5(password);
 		
-		// DB insert
+		// db insert
 		UserEntity user = userBO.addUser(loginId, hashedPassword, name, email);
 		
-		// 응답값 내리기
+		// 응답값
 		Map<String, Object> result = new HashMap<>();
 		if (user != null) {
 			result.put("code", 200);
@@ -76,34 +84,29 @@ public class UserRestController {
 	public Map<String, Object> signIn(
 			@RequestParam("loginId") String loginId,
 			@RequestParam("password") String password,
-			HttpServletRequest request) {
+			HttpSession session) {
 		
-		// password 해싱
+		// 비밀번호 hashing - md5
 		String hashedPassword = EncryptUtils.md5(password);
 		
-		// DB 조회 - loginId, 해싱된 비밀번호 => UserEntity
+		// db 조회(loginId, 해싱된 비밀번호) => UserEntity
 		UserEntity user = userBO.getUserEntityByLoginIdPassword(loginId, hashedPassword);
 		
-		// 로그인 처리 및 응답값
+		// 응답값
 		Map<String, Object> result = new HashMap<>();
 		if (user != null) { // 성공
-			// 세션에 사용자 정보를 담는다.(사용자 각각 마다)
-			HttpSession session = request.getSession();
+			// 로그인 처리
+			// 로그인 정보를 세션에 담는다.(사용자 마다)
 			session.setAttribute("userId", user.getId());
 			session.setAttribute("userLoginId", user.getLoginId());
 			session.setAttribute("userName", user.getName());
 			
 			result.put("code", 200);
 			result.put("result", "성공");
-			
-		} else { // 실패
+		} else { // 로그인 불가
 			result.put("code", 403);
 			result.put("error_message", "존재하지 않는 사용자입니다.");
 		}
-		
 		return result;
-		
 	}
-	
-	
 }
