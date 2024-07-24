@@ -14,39 +14,33 @@ import jakarta.servlet.http.HttpSession;
 
 @RestController
 public class LikeRestController {
-
 	@Autowired
 	private LikeBO likeBO;
-	// GET:		/like?postId=13				@RequestParam("postId")
-	// 또는
-	// GET: 	/like/13 (이번엔 이 방식으로)		@PathVariable
+
+	// GET: /like?postId=13    @RequestParam("postId")
+	// GET: /like/13           @PathVariable
 	@RequestMapping("/like/{postId}")
-	public Map<String, Object> liketoggle(
+	public Map<String, Object> likeToggle(
 			@PathVariable(name = "postId") int postId,
 			HttpSession session) {
 		
 		// 로그인 여부 확인
-		// json으로 확인하기
-		Map<String, Object> result = new HashMap<>(); // 응답값 내릴때도 사용할 것이기 때문에 위에 작성
-		Integer userId = (Integer) session.getAttribute("userId"); // session안에 로그인정보가 들어있기 때문에 session사용
+		Map<String, Object> result = new HashMap<>();
+		Integer userId = (Integer)session.getAttribute("userId");
 		if (userId == null) {
-			// 비로그인인 경우
+			// 비로그인
 			result.put("code", 403);
 			result.put("error_message", "로그인을 해주세요.");
 			return result;
 		}
 		
 		// likeToggle BO 요청
-		// 이 과정에서 Autowired
-		likeBO.likeToggle(postId, userId); // postId는 @PathVariable(name = "postId")를 통해서 넘어오고 userId는 session을 통해서 넘어왔음
+		likeBO.likeToggle(postId, userId);
 		
-		
-		
-		// 성공에 대한 응답
+		// 성공 응답
 		result.put("code", 200);
 		result.put("result", "성공");
 		return result;
-		
 	}
 	
 }
