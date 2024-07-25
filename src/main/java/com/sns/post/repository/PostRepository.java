@@ -8,4 +8,5 @@ import com.sns.post.entity.PostEntity;
 
 public interface PostRepository extends JpaRepository<PostEntity, Integer> {
 	public List<PostEntity> findByOrderByIdDesc();
+	public PostEntity deletePostByPostIdUserId(int postId, int userId);
 }
